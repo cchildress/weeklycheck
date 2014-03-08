@@ -59,12 +59,26 @@ def round_disk_size(value_in, reference_size):
 # My python version of df -h.
 def check_all_disk_usage():
 	partition_list = psutil.disk_partitions()
-	print ('	Partition	Path	Used	Total	Percent')
+	partitions_data = []
+	longest_partition_str = 0
+	longest_mount_str = 0
+	partition_sep = ''
+	mount_sep = ''
 	for partition in partition_list:
 		usage_data = psutil.disk_usage(partition[1])
 		used = round_disk_size(str(usage_data[1]), usage_data[0])
 		total = round_disk_size(str(usage_data[0]), usage_data[0])
-		print ('	' + partition[0] + '	' + partition[1] + '	' + used + '	' + total + '	' + str(usage_data[3]))
+		partitions_data.append({"partition": partition[0], "mount": partition[1], "used": used, "total": total, "percent": str(usage_data[3])})
+		if len(partition[0]) > longest_partition_str:
+			longest_partition_str = len(partition[0])
+		if len(partition[1]) > longest_mount_str:
+			longest_mount_str = len(partition[1])
+	longest_partition_str = longest_partition_str + 2
+	longest_mount_str = longest_mount_str + 2
+	print ('	Partition' + ' '*(longest_partition_str - 9) + 'Path' + ' '*(longest_mount_str - 4) + '	Used	Total	Percent')
+	for i in partitions_data:
+		print ('	' + i['partition'] + ' '*(longest_partition_str - len(i['partition'])) + i['mount'] + ' '*(longest_mount_str - len(i['mount'])) + '	' + i['used'] + '	' + i['total'] + '	' + i['percent'])
+		
 
 # General purpose function to execute shell commands
 def run_shell_cmd(do_this):
