@@ -20,7 +20,7 @@ sensors_cmd = 'sensors'			# Command to collect temperature data.
 portage_cmd = 'emerge -puDN world'	# Command to build the update list (this is intended to work for portage based repos).
 config_file_ssl = '/etc/weeklycheck/ssl_certs'
 
-version = '1.0.0'
+version = '1.0.1'
 debug = 0
 
 # Fetch the uptime from /proc/uptime and format it nicely
