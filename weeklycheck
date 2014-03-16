@@ -92,12 +92,17 @@ def run_shell_cmd(do_this):
 def check_smart_data():
 	dev_list = os.listdir('/dev/')
 	search_dev = re.compile('^sd[a-z]$')
-	search_result = re.compile('[A-S]{6}')
+	search_result = re.compile('SMART\soverall\-health')
 	for dev in dev_list:
 		result = search_dev.match(dev)
 		if result:
-			health = str(search_result.findall(run_shell_cmd(smart_cmd + ' /dev/' + dev))[0])
-			print ('	/dev/' + dev + ': ' + health)
+			output = run_shell_cmd(smart_cmd + ' /dev/' + dev)
+			if search_result.search(output):
+				match = search_result.search(output)
+				health = str(match.group(0))
+				print ('	/dev/' + dev + ': ' + health)
+			else:
+				print ('	/dev/' + dev + ': skipping - not SMART enabled')
 
 # Get temperatures from sensors
 def check_temp_data():

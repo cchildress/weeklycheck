@@ -1,0 +1,12 @@
+weekly check provides the following output:
+1) Uptime
+2) Current CPU usage
+3) Current memory usage
+4) Disk usage
+5) Disk SMART status
+6) Temperature readings from sensorsd
+7) Gentoo portage updates available
+8) Current running kernel version
+9) Time until a list of SSL certs expire
+
+The list of certs is specified in /etc/weeklycheck/ssl_certs 
