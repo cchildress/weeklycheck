@@ -92,7 +92,7 @@ def run_shell_cmd(do_this):
 def check_smart_data():
 	dev_list = os.listdir('/dev/')
 	search_dev = re.compile('^sd[a-z]$')
-	search_result = re.compile('SMART\soverall\-health')
+	search_result = re.compile('[A-S]{6}')
 	for dev in dev_list:
 		result = search_dev.match(dev)
 		if result:
