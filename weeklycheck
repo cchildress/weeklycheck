@@ -18,9 +18,10 @@ import subprocess
 smart_cmd = 'smartctl -H'		# Command to use to fetch SMART data (the /dev/x bit will be added for you).
 sensors_cmd = 'sensors'			# Command to collect temperature data.
 portage_cmd = 'emerge -puDN world'	# Command to build the update list (this is intended to work for portage based repos).
+glsa_cmd = 'glsa-check -t all'	# Command to check for GLSA matches.
 config_file_ssl = '/etc/weeklycheck/ssl_certs'
 
-version = '1.0.1'
+version = '1.0.2'
 debug = 0
 
 # Fetch the uptime from /proc/uptime and format it nicely
@@ -201,6 +202,8 @@ def main():
 	check_temp_data()
 	print ('Package updates:')
 	check_portage_updates()
+	print ('GLSA Check:')
+	print (run_shell_cmd(glsa_cmd))
 	print ('Running kernel: {0}'.format(os.uname()[2]))
 	print ('SSL certificates:')
 	check_all_ssl_certs()
