@@ -6,7 +6,8 @@ weekly check provides the following output:
 5) Disk SMART status
 6) Temperature readings from sensorsd
 7) Gentoo portage updates available
-8) Current running kernel version
-9) Time until a list of SSL certs expire
+8) List of GLSAs that affect the system
+9) Current running kernel version
+10) Time until a list of SSL certs expire
 
 The list of certs is specified in /etc/weeklycheck/ssl_certs 

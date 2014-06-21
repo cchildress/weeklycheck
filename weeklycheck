@@ -121,6 +121,12 @@ def check_portage_updates():
 		if '[ebuild' in i:
 			print ('	' + i)
 
+def check_glsa():
+	output = run_shell_cmd(glsa_cmd)
+	output = output.split('\\n')
+	for i in output:
+		print ('	' + i)
+
 # convert the 20161218201146Z format from the crypto object to something a bit more helpful.
 def ASN1_to_datetime(info):
 	year = int(info[0:4])
@@ -203,7 +209,7 @@ def main():
 	print ('Package updates:')
 	check_portage_updates()
 	print ('GLSA Check:')
-	print (run_shell_cmd(glsa_cmd))
+	check_glsa()
 	print ('Running kernel: {0}'.format(os.uname()[2]))
 	print ('SSL certificates:')
 	check_all_ssl_certs()
