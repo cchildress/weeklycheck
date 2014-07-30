@@ -6,7 +6,10 @@
 
 from datetime import datetime
 from datetime import timedelta
-from OpenSSL import crypto
+try:
+	from OpenSSL import crypto
+except:
+	force_ssl_off = True
 import os
 import psutil
 import re
