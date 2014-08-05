@@ -16,12 +16,12 @@ import subprocess
 force_ssl_off = False
 try:
 	from OpenSSL import crypto
-except:
+except ImportError:
 	force_ssl_off = True
 force_ps_off = False
 try:
 	import psutil
-except:
+except ImportError:
 	force_ps_off = True
 
 smart_cmd = 'smartctl -H'		# Command to use to fetch SMART data (the /dev/x bit will be added for you).
