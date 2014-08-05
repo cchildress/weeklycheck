@@ -4,27 +4,34 @@
 # dev-python/pyopenssl
 # sys-apps/lm_sensors
 
+import configparser
 from datetime import datetime
 from datetime import timedelta
-try:
-	from OpenSSL import crypto
-except:
-	force_ssl_off = True
 import os
-import psutil
 import re
 import shlex
 from socket import gethostname
 from socket import getfqdn
 import subprocess
+force_ssl_off = False
+try:
+	from OpenSSL import crypto
+except:
+	force_ssl_off = True
+force_ps_off = False
+try:
+	import psutil
+except:
+	force_ps_off = True
 
 smart_cmd = 'smartctl -H'		# Command to use to fetch SMART data (the /dev/x bit will be added for you).
 sensors_cmd = 'sensors'			# Command to collect temperature data.
 portage_cmd = 'emerge -puDN world'	# Command to build the update list (this is intended to work for portage based repos).
 glsa_cmd = 'glsa-check -t all'	# Command to check for GLSA matches.
+config_file = '/etc/weeklycheck/config'
 config_file_ssl = '/etc/weeklycheck/ssl_certs'
 
-version = '1.0.2'
+version = '1.1.0'
 debug = 0
 
 # Fetch the uptime from /proc/uptime and format it nicely
@@ -188,6 +195,8 @@ def check_all_ssl_certs():
 	f.close()
 
 def main():
+	config_parser = configparser.SafeConfigParser()
+	config_parser.read(config_file)
 	if debug:
 		print ('+----------------------------------------------+')
 		print ('|   Cam\'s weekly audit - ver ' + version + ' DEV BUILD   |')
@@ -201,21 +210,25 @@ def main():
 	print ('Uptime: {0}'.format(get_uptime()))
 	print ('Generated on {0} at {1} (local time)'.format(datetime.now().strftime('%Y-%m-%d'), datetime.now().strftime('%H:%M:%S')))
 	print ('')
-	print ('CPU usage: {0}%'.format(psutil.cpu_percent(interval=0.5)))
-	print ('Memory consumption: {0}/{1} ({2}%)'.format(str(psutil.virtual_memory()[3])[:-6],str(psutil.virtual_memory()[0])[:-6],psutil.virtual_memory()[2]))
+	if not force_ps_off:
+		print ('CPU usage: {0}%'.format(psutil.cpu_percent(interval=0.5)))
+		print ('Memory consumption: {0}/{1} ({2}%)'.format(str(psutil.virtual_memory()[3])[:-6],str(psutil.virtual_memory()[0])[:-6],psutil.virtual_memory()[2]))
 	print ('Disk Usage:')
 	check_all_disk_usage()
-	print ('SMART status:')
-	check_smart_data()
-	print ('System temperatures:')
-	check_temp_data()
+	if config_parser.get('modules', 'enable_smart'):
+		print ('SMART status:')
+		check_smart_data()
+	if config_parser.get('modules', 'enable_sensors'):
+		print ('System temperatures:')
+		check_temp_data()
 	print ('Package updates:')
 	check_portage_updates()
 	print ('GLSA Check:')
 	check_glsa()
 	print ('Running kernel: {0}'.format(os.uname()[2]))
-	print ('SSL certificates:')
-	check_all_ssl_certs()
+	if config_parser.get('modules', 'enable_ssl') and not force_ssl_off:
+		print ('SSL certificates:')
+		check_all_ssl_certs()
 
 if __name__ == '__main__':
 	main()

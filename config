@@ -1,0 +1,4 @@
+[modules]
+enable_ssl = 1
+enable_smart = 1
+enable_sensors = 1
