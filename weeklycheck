@@ -134,9 +134,8 @@ def check_portage_updates():
 def check_glsa():
 	output = run_shell_cmd(glsa_cmd)
 	output = output.split('\\n')
-	print(output)
 	print('	' + output[0].replace('b\'', ''))
-	for i in output[1:]:
+	for i in output[1:-1]:
 		print ('	' + i)
 
 # convert the 20161218201146Z format from the crypto object to something a bit more helpful.
