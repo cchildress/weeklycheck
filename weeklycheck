@@ -195,8 +195,6 @@ def check_all_ssl_certs():
 	f.close()
 
 def main():
-	config_parser = configparser.SafeConfigParser()
-	config_parser.read(config_file)
 	if debug:
 		print ('+----------------------------------------------+')
 		print ('|   Cam\'s weekly audit - ver ' + version + ' DEV BUILD   |')
@@ -206,6 +204,17 @@ def main():
 		print ('+------------------------------------+')
 		print ('|   Cam\'s weekly audit - ver ' + version + '   |')
 		print ('+------------------------------------+')
+	try:
+		config_parser = configparser.SafeConfigParser()
+		config_parser.read(config_file)
+		enable_sensors = config_parser.get('modules', 'enable_sensors')
+		enable_smart = config_parser.get('modules', 'enable_smart')
+		enable_ssl = config_parser.get('modules', 'enable_ssl')
+	except (configparser.NoSectionError, IOError):
+		print('***Could not open config file ' + config_file + '. Assuming defaults.***')
+		enable_sensors = False
+		enable_smart = False
+		enable_ssl = False
 	print ('Hostname: {0} ({1})'.format(gethostname(), getfqdn()))
 	print ('Uptime: {0}'.format(get_uptime()))
 	print ('Generated on {0} at {1} (local time)'.format(datetime.now().strftime('%Y-%m-%d'), datetime.now().strftime('%H:%M:%S')))
@@ -215,18 +224,18 @@ def main():
 		print ('Memory consumption: {0}/{1} ({2}%)'.format(str(psutil.virtual_memory()[3])[:-6],str(psutil.virtual_memory()[0])[:-6],psutil.virtual_memory()[2]))
 	print ('Disk Usage:')
 	check_all_disk_usage()
-	if config_parser.get('modules', 'enable_smart'):
+	if enable_smart:
 		print ('SMART status:')
 		check_smart_data()
-	if config_parser.get('modules', 'enable_sensors'):
+	if enable_sensors:
 		print ('System temperatures:')
 		check_temp_data()
 	print ('Package updates:')
-	check_portage_updates()
+	#check_portage_updates()
 	print ('GLSA Check:')
 	check_glsa()
 	print ('Running kernel: {0}'.format(os.uname()[2]))
-	if config_parser.get('modules', 'enable_ssl') and not force_ssl_off:
+	if enable_ssl and not force_ssl_off:
 		print ('SSL certificates:')
 		check_all_ssl_certs()
 
