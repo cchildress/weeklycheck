@@ -222,8 +222,8 @@ def main():
 	if not force_ps_off:
 		print ('CPU usage: {0}%'.format(psutil.cpu_percent(interval=0.5)))
 		print ('Memory consumption: {0}/{1} ({2}%)'.format(str(psutil.virtual_memory()[3])[:-6],str(psutil.virtual_memory()[0])[:-6],psutil.virtual_memory()[2]))
-	print ('Disk Usage:')
-	check_all_disk_usage()
+		print ('Disk Usage:')
+		check_all_disk_usage()
 	if enable_smart:
 		print ('SMART status:')
 		check_smart_data()
@@ -231,7 +231,7 @@ def main():
 		print ('System temperatures:')
 		check_temp_data()
 	print ('Package updates:')
-	#check_portage_updates()
+	check_portage_updates()
 	print ('GLSA Check:')
 	check_glsa()
 	print ('Running kernel: {0}'.format(os.uname()[2]))
