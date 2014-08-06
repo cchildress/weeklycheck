@@ -10,4 +10,15 @@ weekly check provides the following output:
 9) Current running kernel version
 10) Time until a list of SSL certs expire
 
-The list of certs is specified in /etc/weeklycheck/ssl_certs 
+The script can be scheduled in cron to provide you a nice summary once a week (or more often if you want).
+Right now it really only works in Gentoo, but you could probably tweak the updates function to parse a different package manager. You'll probably need to remove the GLSA check entirely.
+
+The SMART, sensors, and SSL outputs can be enabled or disabled via /etc/weeklycheck/config
+This config file is based on the ini file format.
+Currently the following options are supported:
+[modules]
+enable_ssl = 1
+enable_smart = 1
+enable_sensors = 1
+
+The list of certs is still specified in /etc/weeklycheck/ssl_certs. I'm going to move this over to the main config file eventually.
